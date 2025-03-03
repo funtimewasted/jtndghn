@@ -5,26 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Question Bank</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Interactive Question Bank</h1>
+        <header class="app-header">
+            <div class="header-content">
+                <h1>Interactive Question Bank</h1>
+                <div class="header-actions">
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="searchToggle" class="search-toggle" aria-label="Search questions">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="searchBar" class="search-bar hidden">
+                <input type="text" placeholder="Search questions or topics..." aria-label="Search">
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </header>
+
+        <div class="breadcrumbs">
+            <span id="currentPath">Home</span>
         </div>
 
         <div class="nav-section">
             <div class="subjects">
                 <button class="nav-btn" data-subject="اللغة العربية">
-                    <span>📚</span> اللغة العربية
+                    <span class="icon">📚</span> <span class="label">اللغة العربية</span>
                 </button>
                 <button class="nav-btn active" data-subject="english">
-                    <span>🌎</span> English
+                    <span class="icon">🌎</span> <span class="label">English</span>
                 </button>
                 <button class="nav-btn" data-subject="التاريخ">
-                    <span>📜</span> التاريخ
+                    <span class="icon">📜</span> <span class="label">التاريخ</span>
                 </button>
                 <button class="nav-btn" data-subject="دين">
-                    <span>📖</span> دين
+                    <span class="icon">📖</span> <span class="label">دين</span>
+                </button>
+                <button class="nav-btn more-subjects">
+                    <span class="icon">+</span> <span class="label">More</span>
                 </button>
             </div>
 
@@ -33,17 +55,65 @@
                     <button class="semester-btn active" data-semester="first">First Semester</button>
                     <button class="semester-btn" data-semester="second">Second Semester</button>
                 </div>
+                <div class="view-options">
+                    <button class="view-btn active" data-view="all"><i class="fas fa-th-list"></i> All</button>
+                    <button class="view-btn" data-view="bookmarked"><i class="fas fa-bookmark"></i> Bookmarked</button>
+                </div>
             </div>
         </div>
 
         <div id="content">
             <!-- Content will be loaded dynamically from topics.js -->
+            <div class="progress-overview">
+                <h3>Your Progress</h3>
+                <div class="progress-cards">
+                    <div class="progress-card">
+                        <div class="progress-circle" data-progress="65">
+                            <svg viewBox="0 0 36 36">
+                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path class="circle" stroke-dasharray="65, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            </svg>
+                            <div class="progress-number">65%</div>
+                        </div>
+                        <div class="progress-title">Unit 1</div>
+                    </div>
+                    <div class="progress-card">
+                        <div class="progress-circle" data-progress="30">
+                            <svg viewBox="0 0 36 36">
+                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path class="circle" stroke-dasharray="30, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            </svg>
+                            <div class="progress-number">30%</div>
+                        </div>
+                        <div class="progress-title">Unit 2</div>
+                    </div>
+                    <div class="progress-card">
+                        <div class="progress-circle" data-progress="0">
+                            <svg viewBox="0 0 36 36">
+                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            </svg>
+                            <div class="progress-number">0%</div>
+                        </div>
+                        <div class="progress-title">Unit 3</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="question-modal" id="questionModal">
             <div class="modal-content">
-                <span class="close-modal" onclick="closeModal()">&times;</span>
-                <h2 id="modalTitle"></h2>
+                <div class="modal-header">
+                    <h2 id="modalTitle"></h2>
+                    <div class="modal-actions">
+                        <button class="bookmark-btn" aria-label="Bookmark this question">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <button class="close-modal" onclick="closeModal()" aria-label="Close modal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
                 <div id="questionContent"></div>
             </div>
         </div>
@@ -51,5 +121,26 @@
 
     <script src="topics.js"></script>
     <script src="questions.js"></script>
+    <script>
+        // Basic functionality for theme toggle
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-moon')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
+
+        // Search toggle functionality
+        document.getElementById('searchToggle').addEventListener('click', function() {
+            const searchBar = document.getElementById('searchBar');
+            searchBar.classList.toggle('hidden');
+            if (!searchBar.classList.contains('hidden')) {
+                searchBar.querySelector('input').focus();
+            }
+        });
+    </script>
 </body>
 </html>
